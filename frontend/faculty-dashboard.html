@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Dashboard - Plagiarism Detection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&family=Cabinet+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <i class="fas fa-shield-alt"></i>
+        <span>Plagiarism Check - Faculty</span>
+      </div>
+      
+      <div class="navbar-menu">
+        <a href="#dashboard" class="nav-link">Dashboard</a>
+        <a href="#classes" class="nav-link">Classes</a>
+        <a href="#reports" class="nav-link">Reports</a>
+        <div class="nav-dropdown">
+          <button class="nav-link dropdown-btn">
+            <img src="https://via.placeholder.com/32" alt="User Avatar" class="user-avatar" />
+            Faculty
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#profile">Profile</a>
+            <a href="#settings">Settings</a>
+            <hr />
+            <a href="#logout">Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <aside class="sidebar">
+      <div class="sidebar-menu">
+        <div class="menu-section">
+          <h3 class="menu-title">Main</h3>
+          <ul class="menu-list">
+            <li><a href="#dashboard" class="menu-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#classes" class="menu-link"><i class="fas fa-book"></i> Classes</a></li>
+            <li><a href="#assignments" class="menu-link"><i class="fas fa-tasks"></i> Assignments</a></li>
+            <li><a href="#submissions" class="menu-link"><i class="fas fa-file-upload"></i> Submissions</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-section">
+          <h3 class="menu-title">Analysis</h3>
+          <ul class="menu-list">
+            <li><a href="#reports" class="menu-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="#flagged" class="menu-link"><i class="fas fa-flag"></i> Flagged Items</a></li>
+            <li><a href="#analytics" class="menu-link"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="content-wrapper">
+      <!-- Dashboard -->
+      <section id="dashboard" class="content-section active">
+        <div class="section-header">
+          <div>
+            <h1>Welcome Back, Dr. Smith</h1>
+            <p class="subtitle">Your courses and plagiarism detection overview</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="showModal('newAssignment')">
+              <i class="fas fa-plus"></i> New Assignment
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon bg-blue">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Active Classes</h3>
+              <p class="stat-value">3</p>
+              <span class="stat-change">CS101, CS201, CS301</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-red">
+              <i class="fas fa-flag"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Flagged Submissions</h3>
+              <p class="stat-value">8</p>
+              <span class="stat-change positive">↓ 20% from last week</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-green">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Total Submissions</h3>
+              <p class="stat-value">267</p>
+              <span class="stat-change">This semester</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-purple">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Total Students</h3>
+              <p class="stat-value">180</p>
+              <span class="stat-change">Across all classes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity-section">
+          <div class="section-header">
+            <h2>Recent Alerts</h2>
+            <a href="#flagged" class="link-more">View All</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon red">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="activity-content">
+                <h3>High Similarity Detected</h3>
+                <p>Student 1024030226 - Assignment 5 (92% match)</p>
+                <span class="activity-time">1 hour ago</span>
+              </div>
+              <button class="btn btn-sm btn-primary" onclick="showSection('reports')">Review</button>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon red">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="activity-content">
+                <h3>Moderate Similarity Alert</h3>
+                <p>Student 1024030227 - Assignment 5 (68% match)</p>
+                <span class="activity-time">3 hours ago</span>
+              </div>
+              <button class="btn btn-sm btn-primary" onclick="showSection('reports')">Review</button>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon blue">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="activity-content">
+                <h3>Batch Analysis Complete</h3>
+                <p>CS101 Assignment 5 - 156 submissions analyzed</p>
+                <span class="activity-time">5 hours ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Classes -->
+      <section id="classes" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>My Classes</h1>
+            <p class="subtitle">Manage your courses and students</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="showModal('newClass')">
+              <i class="fas fa-plus"></i> Add Class
+            </button>
+          </div>
+        </div>
+
+        <div class="courses-grid">
+          <div class="course-card">
+            <div class="course-header">CS101</div>
+            <h3>Programming Fundamentals</h3>
+            <p class="course-faculty">Spring 2025</p>
+            <div class="course-info">
+              <p><strong>Students:</strong> 156</p>
+              <p><strong>Assignments:</strong> 8</p>
+              <p><strong>Submissions:</strong> 98</p>
+            </div>
+            <button class="btn btn-primary btn-block">Manage Class</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">CS201</div>
+            <h3>Database Management Systems</h3>
+            <p class="course-faculty">Spring 2025</p>
+            <div class="course-info">
+              <p><strong>Students:</strong> 98</p>
+              <p><strong>Assignments:</strong> 6</p>
+              <p><strong>Submissions:</strong> 89</p>
+            </div>
+            <button class="btn btn-primary btn-block">Manage Class</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">CS301</div>
+            <h3>Web Development</h3>
+            <p class="course-faculty">Spring 2025</p>
+            <div class="course-info">
+              <p><strong>Students:</strong> 76</p>
+              <p><strong>Assignments:</strong> 7</p>
+              <p><strong>Submissions:</strong> 45</p>
+            </div>
+            <button class="btn btn-primary btn-block">Manage Class</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments -->
+      <section id="assignments" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>Assignments</h1>
+            <p class="subtitle">Create and manage assignments</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="showModal('newAssignment')">
+              <i class="fas fa-plus"></i> Create Assignment
+            </button>
+          </div>
+        </div>
+
+        <div class="assignments-grid">
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>Advanced Algorithms</h3>
+              <span class="badge badge-info">CS101</span>
+            </div>
+            <p class="assignment-code">Assignment #5</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: Apr 25, 2025</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-file-alt"></i>
+                <span>156 submissions</span>
+              </div>
+            </div>
+            <div class="assignment-stats">
+              <div class="stat">
+                <span class="stat-label">Analyzed</span>
+                <span class="stat-number">156</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Flagged</span>
+                <span class="stat-number">4</span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showSection('submissions')">View Submissions</button>
+          </div>
+
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>Data Structures</h3>
+              <span class="badge badge-info">CS201</span>
+            </div>
+            <p class="assignment-code">Assignment #4</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: Apr 22, 2025</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-file-alt"></i>
+                <span>89 submissions</span>
+              </div>
+            </div>
+            <div class="assignment-stats">
+              <div class="stat">
+                <span class="stat-label">Analyzed</span>
+                <span class="stat-number">89</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Flagged</span>
+                <span class="stat-number">1</span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showSection('submissions')">View Submissions</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submissions -->
+      <section id="submissions" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>Submissions</h1>
+            <p class="subtitle">Review and grade student submissions</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="exportData()">
+              <i class="fas fa-download"></i> Export
+            </button>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <div class="filter-group">
+            <label>Class</label>
+            <select>
+              <option>All Classes</option>
+              <option>CS101</option>
+              <option>CS201</option>
+              <option>CS301</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Status</label>
+            <select>
+              <option>All</option>
+              <option>High Alert</option>
+              <option>Medium Alert</option>
+              <option>Clean</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Assignment</th>
+                <th>Submitted</th>
+                <th>Grade</th>
+                <th>Similarity %</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="flag-high">
+                <td>1024030226</td>
+                <td>Assignment 5</td>
+                <td>2025-04-20</td>
+                <td>—</td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill high" style="width: 92%"></div>
+                    <span class="similarity-text">92%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-error">Very High</span></td>
+                <td><button class="btn btn-sm btn-primary">Review</button></td>
+              </tr>
+              <tr class="flag-medium">
+                <td>1024030227</td>
+                <td>Assignment 5</td>
+                <td>2025-04-19</td>
+                <td>—</td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill medium" style="width: 65%"></div>
+                    <span class="similarity-text">65%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-alert">Medium</span></td>
+                <td><button class="btn btn-sm btn-primary">Review</button></td>
+              </tr>
+              <tr>
+                <td>1024030228</td>
+                <td>Assignment 5</td>
+                <td>2025-04-21</td>
+                <td>A</td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill low" style="width: 8%"></div>
+                    <span class="similarity-text">8%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">Clean</span></td>
+                <td><button class="btn btn-sm btn-outline">Grade</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Reports -->
+      <section id="reports" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>Plagiarism Reports</h1>
+            <p class="subtitle">Detailed analysis of submissions</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="generateReport()">
+              <i class="fas fa-chart-bar"></i> Generate Report
+            </button>
+          </div>
+        </div>
+
+        <div class="report-container">
+          <div class="report-header">
+            <h2>Student: 1024030226</h2>
+            <p>Assignment 5 - Advanced Algorithms | CS101</p>
+          </div>
+
+          <div class="report-details">
+            <div class="detail-row">
+              <span class="detail-label">Similarity Score:</span>
+              <span class="detail-value high">92%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Risk Level:</span>
+              <span class="detail-value badge badge-error">Critical</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Matched Sources:</span>
+              <span class="detail-value">3 sources detected</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Recommendation:</span>
+              <span class="detail-value">Academic integrity violation likely</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="alertStudent()">Alert Student</button>
+            <button class="btn btn-outline" onclick="dismissAlert()">Dismiss Alert</button>
+            <button class="btn btn-outline" onclick="generateFullReport()">Generate Full Report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Flagged Items -->
+      <section id="flagged" class="content-section">
+        <div class="section-header">
+          <h1>Flagged Submissions</h1>
+          <p class="subtitle">Review suspected plagiarism cases</p>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Assignment</th>
+                <th>Similarity</th>
+                <th>Flag Date</th>
+                <th>Action Required</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="flag-high">
+                <td>1024030226</td>
+                <td>Assignment 5</td>
+                <td>92%</td>
+                <td>2025-04-23</td>
+                <td><strong style="color: var(--color-error);">Contact Student</strong></td>
+                <td><span class="badge badge-error">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Analytics -->
+      <section id="analytics" class="content-section">
+        <div class="section-header">
+          <h1>Analytics</h1>
+          <p class="subtitle">Comprehensive plagiarism statistics</p>
+        </div>
+
+        <div class="charts-container">
+          <div class="chart-card">
+            <h2>Similarity Distribution</h2>
+            <canvas id="plagiarismChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h2>Submissions Over Time</h2>
+            <canvas id="submissionChart"></canvas>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <div id="newAssignmentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create New Assignment</h2>
+        <button class="modal-close" onclick="closeModal('newAssignment')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Assignment Title</label>
+          <input type="text" placeholder="Enter assignment title" />
+        </div>
+        <div class="form-group">
+          <label>Class</label>
+          <select>
+            <option>Select a class</option>
+            <option>CS101</option>
+            <option>CS201</option>
+            <option>CS301</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Due Date</label>
+          <input type="date" />
+        </div>
+        <div class="form-group">
+          <label>Max Marks</label>
+          <input type="number" value="100" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('newAssignment')">Cancel</button>
+        <button class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="newClassModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Class</h2>
+        <button class="modal-close" onclick="closeModal('newClass')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Course Code</label>
+          <input type="text" placeholder="e.g., CS401" />
+        </div>
+        <div class="form-group">
+          <label>Course Name</label>
+          <input type="text" placeholder="Course name" />
+        </div>
+        <div class="form-group">
+          <label>Credits</label>
+          <input type="number" value="3" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('newClass')">Cancel</button>
+        <button class="btn btn-primary">Add Class</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div style="text-align: center; padding: 2rem;">
+      <p>&copy; 2025 Plagiarism Detection System</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function alertStudent() {
+      alert('Student alert sent successfully');
+    }
+    
+    function dismissAlert() {
+      alert('Alert dismissed');
+    }
+    
+    function generateFullReport() {
+      alert('Generating comprehensive report...');
+    }
+  </script>
+</body>
+</html>

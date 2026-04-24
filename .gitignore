@@ -1,0 +1,17 @@
+node_modules
+.env
+.env.local
+backend/.env
+uploads/
+logs/
+backend/uploads/
+backend/logs/
+dist/
+build/
+.DS_Store
+*.log
+.vscode
+.idea
+*.pem
+coverage/
+.git

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Plagiarism Detection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&family=Cabinet+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <i class="fas fa-magnifying-glass"></i>
+        </div>
+        <h1>PlagiarismCheck</h1>
+        <p>Create your account</p>
+      </div>
+
+      <form id="registerForm" class="auth-form">
+        <!-- User Type Selection -->
+        <div class="role-selection">
+          <p class="role-label">I am registering as:</p>
+          <div class="role-buttons">
+            <input type="radio" id="roleStudent" name="userRole" value="student" checked />
+            <label for="roleStudent">
+              <i class="fas fa-user-graduate"></i>
+              <span>Student</span>
+            </label>
+
+            <input type="radio" id="roleFaculty" name="userRole" value="faculty" />
+            <label for="roleFaculty">
+              <i class="fas fa-chalkboard-user"></i>
+              <span>Faculty</span>
+            </label>
+
+            <input type="radio" id="roleAdmin" name="userRole" value="admin" />
+            <label for="roleAdmin">
+              <i class="fas fa-shield"></i>
+              <span>Admin</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Common Fields -->
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            name="fullName" 
+            placeholder="Your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="your@email.com"
+            required
+          />
+        </div>
+
+        <!-- Student Specific Fields -->
+        <div id="studentFields" class="role-specific-fields">
+          <div class="form-group">
+            <label for="rollNo">Roll Number</label>
+            <input 
+              type="text" 
+              id="rollNo" 
+              name="rollNo" 
+              placeholder="e.g., 1024030226"
+            />
+          </div>
+          <div class="form-group">
+            <label for="course">Course</label>
+            <select id="course" name="course">
+              <option>Select your course</option>
+              <option>CS101 - Programming Fundamentals</option>
+              <option>CS201 - Database Systems</option>
+              <option>CS301 - Web Development</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Faculty Specific Fields -->
+        <div id="facultyFields" class="role-specific-fields" style="display: none;">
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input 
+              type="text" 
+              id="department" 
+              name="department" 
+              placeholder="e.g., Computer Science"
+            />
+          </div>
+          <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input 
+              type="text" 
+              id="employeeId" 
+              name="employeeId" 
+              placeholder="Institutional Employee ID"
+            />
+          </div>
+        </div>
+
+        <!-- Common Fields -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input-group">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="••••••••"
+              required
+            />
+            <button type="button" class="password-toggle" id="passwordToggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <p class="help-text">Minimum 8 characters with uppercase, lowercase, and numbers</p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-input-group">
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              placeholder="••••••••"
+              required
+            />
+            <button type="button" class="password-toggle" id="confirmPasswordToggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="form-group">
+          <label for="terms" class="checkbox-label">
+            <input type="checkbox" id="terms" name="terms" required />
+            <span>I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          Create Account
+        </button>
+
+        <div class="form-divider">
+          <span>or</span>
+        </div>
+
+        <button type="button" class="btn btn-outline btn-block" id="googleBtn">
+          <i class="fab fa-google"></i> Sign up with Google
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="login.html" class="link">Sign in here</a></p>
+      </div>
+    </div>
+
+    <div class="auth-illustration">
+      <div class="illustration-content">
+        <h2>Join Us Today</h2>
+        <p>Start using the most advanced plagiarism detection system.</p>
+        <ul class="features-list">
+          <li><i class="fas fa-check"></i> Free account setup</li>
+          <li><i class="fas fa-check"></i> Instant results</li>
+          <li><i class="fas fa-check"></i> Secure platform</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <div class="modal-icon success">
+        <i class="fas fa-check"></i>
+      </div>
+      <h3>Account Created!</h3>
+      <p>Your account has been created successfully. Redirecting to login...</p>
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal" id="errorModal">
+    <div class="modal-content">
+      <div class="modal-icon error">
+        <i class="fas fa-exclamation"></i>
+      </div>
+      <h3>Registration Failed</h3>
+      <p id="errorMessage">Please check your information and try again.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('errorModal').classList.remove('active')">Try Again</button>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // Role selection toggle
+    const roleRadios = document.querySelectorAll('input[name="userRole"]');
+    const studentFields = document.getElementById('studentFields');
+    const facultyFields = document.getElementById('facultyFields');
+
+    roleRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        studentFields.style.display = this.value === 'student' ? 'block' : 'none';
+        facultyFields.style.display = this.value === 'faculty' ? 'block' : 'none';
+      });
+    });
+
+    // Password visibility toggles
+    document.getElementById('passwordToggle').addEventListener('click', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('password');
+      const type = input.type === 'password' ? 'text' : 'password';
+      input.type = type;
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    document.getElementById('confirmPasswordToggle').addEventListener('click', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('confirmPassword');
+      const type = input.type === 'password' ? 'text' : 'password';
+      input.type = type;
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    // Form submission
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        userRole: document.querySelector('input[name="userRole"]:checked').value,
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value
+      };
+
+      // Validate passwords match
+      if (formData.password !== formData.confirmPassword) {
+        document.getElementById('errorMessage').textContent = 'Passwords do not match!';
+        document.getElementById('errorModal').classList.add('active');
+        return;
+      }
+
+      // Add role-specific fields
+      if (formData.userRole === 'student') {
+        formData.rollNo = document.getElementById('rollNo').value;
+        formData.course = document.getElementById('course').value;
+      } else if (formData.userRole === 'faculty') {
+        formData.department = document.getElementById('department').value;
+        formData.employeeId = document.getElementById('employeeId').value;
+      }
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          document.getElementById('successModal').classList.add('active');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2500);
+        } else {
+          const error = await response.json();
+          document.getElementById('errorMessage').textContent = error.message || 'Registration failed. Please try again.';
+          document.getElementById('errorModal').classList.add('active');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+        document.getElementById('errorModal').classList.add('active');
+      }
+    });
+
+    // Google Sign-Up
+    document.getElementById('googleBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Google sign-up clicked');
+    });
+  </script>
+</body>
+</html>

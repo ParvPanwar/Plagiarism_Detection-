@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Node.js Backend
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/plagiarism_detection
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=https://yourdomain.com
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
+    restart: unless-stopped
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=plagiarism_detection
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./:/app:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  redis_data:

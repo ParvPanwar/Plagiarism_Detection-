@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard - Plagiarism Detection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&family=Cabinet+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <i class="fas fa-shield-alt"></i>
+        <span>Plagiarism Check</span>
+      </div>
+      
+      <div class="navbar-menu">
+        <a href="#submissions" class="nav-link">My Submissions</a>
+        <a href="#grades" class="nav-link">Grades</a>
+        <a href="#messages" class="nav-link">Messages</a>
+        <div class="nav-dropdown">
+          <button class="nav-link dropdown-btn">
+            <img src="https://via.placeholder.com/32" alt="User Avatar" class="user-avatar" />
+            Student
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#profile">My Profile</a>
+            <a href="#settings">Settings</a>
+            <a href="#help">Help</a>
+            <hr />
+            <a href="#logout">Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <aside class="sidebar">
+      <div class="sidebar-menu">
+        <div class="menu-section">
+          <h3 class="menu-title">Main</h3>
+          <ul class="menu-list">
+            <li><a href="#dashboard" class="menu-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#assignments" class="menu-link"><i class="fas fa-tasks"></i> Assignments</a></li>
+            <li><a href="#submissions" class="menu-link"><i class="fas fa-file-upload"></i> My Submissions</a></li>
+            <li><a href="#reports" class="menu-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-section">
+          <h3 class="menu-title">Academic</h3>
+          <ul class="menu-list">
+            <li><a href="#courses" class="menu-link"><i class="fas fa-book"></i> My Courses</a></li>
+            <li><a href="#grades" class="menu-link"><i class="fas fa-star"></i> Grades</a></li>
+            <li><a href="#messages" class="menu-link"><i class="fas fa-envelope"></i> Messages</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="content-wrapper">
+      <!-- Dashboard -->
+      <section id="dashboard" class="content-section active">
+        <div class="section-header">
+          <div>
+            <h1>Welcome, Student!</h1>
+            <p class="subtitle">Here's your academic progress and submissions</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon bg-blue">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Active Assignments</h3>
+              <p class="stat-value">3</p>
+              <span class="stat-change">Due this week</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-green">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Submissions</h3>
+              <p class="stat-value">12</p>
+              <span class="stat-change positive">All clean</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-purple">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Average Grade</h3>
+              <p class="stat-value">A-</p>
+              <span class="stat-change positive">↑ Excellent</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon bg-blue">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+              <h3>Messages</h3>
+              <p class="stat-value">2</p>
+              <span class="stat-change">Unread</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity-section">
+          <div class="section-header">
+            <h2>Recent Activity</h2>
+            <a href="#submissions" class="link-more">View All</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon green">
+                <i class="fas fa-file-upload"></i>
+              </div>
+              <div class="activity-content">
+                <h3>Submission Accepted</h3>
+                <p>Database Systems Assignment - Similarity: 12%</p>
+                <span class="activity-time">2 hours ago</span>
+              </div>
+              <a href="#reports" class="btn btn-sm btn-outline">View Report</a>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon blue">
+                <i class="fas fa-clipboard"></i>
+              </div>
+              <div class="activity-content">
+                <h3>New Assignment</h3>
+                <p>Web Development Project - Due: May 5, 2025</p>
+                <span class="activity-time">1 day ago</span>
+              </div>
+              <a href="#assignments" class="btn btn-sm btn-outline">View Details</a>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon blue">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="activity-content">
+                <h3>Message from Instructor</h3>
+                <p>Dr. John Smith commented on your assignment</p>
+                <span class="activity-time">3 days ago</span>
+              </div>
+              <a href="#messages" class="btn btn-sm btn-outline">Read</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments -->
+      <section id="assignments" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>Assignments</h1>
+            <p class="subtitle">View and submit your assignments</p>
+          </div>
+        </div>
+
+        <div class="assignments-grid">
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>Advanced Algorithms</h3>
+              <span class="badge badge-info">CS101</span>
+            </div>
+            <p class="assignment-code">Assignment #5</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: Apr 25, 2025</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>2 days left</span>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(165, 91, 33, 0.15); color: var(--color-warning); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
+              Not Submitted
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showModal('submitAssignment')">Submit Assignment</button>
+          </div>
+
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>Data Structures</h3>
+              <span class="badge badge-info">CS201</span>
+            </div>
+            <p class="assignment-code">Assignment #4</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: Apr 22, 2025</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-check"></i>
+                <span>Submitted</span>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(67, 122, 34, 0.15); color: var(--color-success); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
+              ✓ Submitted (Grade: A-)
+            </div>
+            <button class="btn btn-outline btn-block">View Feedback</button>
+          </div>
+
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>Web Design Project</h3>
+              <span class="badge badge-info">CS301</span>
+            </div>
+            <p class="assignment-code">Project Report</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: Apr 30, 2025</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>7 days left</span>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(3, 105, 161, 0.15); color: var(--color-blue); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
+              In Progress
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showModal('submitAssignment')">Submit Assignment</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- My Submissions -->
+      <section id="submissions" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>My Submissions</h1>
+            <p class="subtitle">Track all your submitted assignments</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Assignment</th>
+                <th>Course</th>
+                <th>Submitted Date</th>
+                <th>Grade</th>
+                <th>Similarity %</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Data Structures</td>
+                <td>CS201</td>
+                <td>2025-04-22</td>
+                <td><strong>A-</strong></td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill low" style="width: 12%"></div>
+                    <span class="similarity-text">12%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">Graded</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
+              </tr>
+              <tr>
+                <td>Programming Fundamentals</td>
+                <td>CS101</td>
+                <td>2025-04-20</td>
+                <td><strong>B+</strong></td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill low" style="width: 15%"></div>
+                    <span class="similarity-text">15%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">Graded</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
+              </tr>
+              <tr>
+                <td>Advanced Algorithms</td>
+                <td>CS101</td>
+                <td>2025-04-18</td>
+                <td><strong>A</strong></td>
+                <td>
+                  <div class="similarity-bar">
+                    <div class="similarity-fill low" style="width: 8%"></div>
+                    <span class="similarity-text">8%</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-success">Graded</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Reports -->
+      <section id="reports" class="content-section">
+        <div class="section-header">
+          <div>
+            <h1>Submission Reports</h1>
+            <p class="subtitle">Plagiarism detection results for your submissions</p>
+          </div>
+        </div>
+
+        <div class="report-container">
+          <div class="report-header">
+            <h2>Data Structures Assignment - CS201</h2>
+            <p>Submission Date: April 22, 2025 | Grade: A-</p>
+          </div>
+
+          <div class="comparison-grid">
+            <div style="padding: 1.5rem; background: var(--color-bg); border-radius: 0.65rem;">
+              <h3 style="margin-bottom: 1rem; font-weight: 700;">Analysis Results</h3>
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--color-surface); border-radius: 0.5rem;">
+                  <span style="font-weight: 600;">Overall Similarity</span>
+                  <span style="font-size: 1.5rem; font-weight: 800; color: var(--color-success);">12%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--color-surface); border-radius: 0.5rem;">
+                  <span style="font-weight: 600;">Matched Words</span>
+                  <span style="font-size: 1rem; font-weight: 700;">142 / 1,250</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--color-surface); border-radius: 0.5rem;">
+                  <span style="font-weight: 600;">Risk Level</span>
+                  <span class="badge badge-success">Low Risk</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--color-surface); border-radius: 0.5rem;">
+                  <span style="font-weight: 600;">Status</span>
+                  <span class="badge badge-success">Verified Clean</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 1.5rem; background: var(--color-bg); border-radius: 0.65rem;">
+              <h3 style="margin-bottom: 1rem; font-weight: 700;">Quick Tips</h3>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                <li style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                  <i class="fas fa-check" style="color: var(--color-success); margin-top: 0.25rem;"></i>
+                  Your submission shows good originality
+                </li>
+                <li style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                  <i class="fas fa-check" style="color: var(--color-success); margin-top: 0.25rem;"></i>
+                  Proper citations have been applied
+                </li>
+                <li style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                  <i class="fas fa-check" style="color: var(--color-success); margin-top: 0.25rem;"></i>
+                  No concerning patterns detected
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="downloadReport()">Download Report</button>
+            <button class="btn btn-outline" onclick="shareReport()">Share Report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- My Courses -->
+      <section id="courses" class="content-section">
+        <div class="section-header">
+          <h1>My Courses</h1>
+          <p class="subtitle">View your enrolled courses</p>
+        </div>
+
+        <div class="courses-grid">
+          <div class="course-card">
+            <div class="course-header">CS101</div>
+            <h3>Programming Fundamentals</h3>
+            <p class="course-faculty">Dr. John Smith</p>
+            <div class="course-info">
+              <p><strong>Credits:</strong> 3</p>
+              <p><strong>Grade:</strong> B+</p>
+              <p><strong>Progress:</strong> 85%</p>
+            </div>
+            <button class="btn btn-outline btn-block">View Course</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">CS201</div>
+            <h3>Database Management Systems</h3>
+            <p class="course-faculty">Dr. Sarah Johnson</p>
+            <div class="course-info">
+              <p><strong>Credits:</strong> 4</p>
+              <p><strong>Grade:</strong> A-</p>
+              <p><strong>Progress:</strong> 90%</p>
+            </div>
+            <button class="btn btn-outline btn-block">View Course</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">CS301</div>
+            <h3>Web Development</h3>
+            <p class="course-faculty">Prof. Michael Chen</p>
+            <div class="course-info">
+              <p><strong>Credits:</strong> 3</p>
+              <p><strong>Grade:</strong> A</p>
+              <p><strong>Progress:</strong> 70%</p>
+            </div>
+            <button class="btn btn-outline btn-block">View Course</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grades -->
+      <section id="grades" class="content-section">
+        <div class="section-header">
+          <h1>Grades</h1>
+          <p class="subtitle">View your academic performance</p>
+        </div>
+
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; padding: 1.5rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div style="padding: 1rem; background: var(--color-bg); border-radius: 0.65rem; text-align: center;">
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Overall GPA</p>
+              <p style="font-size: 2rem; font-weight: 800; color: var(--color-primary);">3.78</p>
+            </div>
+            <div style="padding: 1rem; background: var(--color-bg); border-radius: 0.65rem; text-align: center;">
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Average Grade</p>
+              <p style="font-size: 2rem; font-weight: 800; color: var(--color-primary);">A-</p>
+            </div>
+            <div style="padding: 1rem; background: var(--color-bg); border-radius: 0.65rem; text-align: center;">
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Courses Completed</p>
+              <p style="font-size: 2rem; font-weight: 800; color: var(--color-primary);">3</p>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course Code</th>
+                  <th>Course Name</th>
+                  <th>Credits</th>
+                  <th>Grade</th>
+                  <th>Instructor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CS101</td>
+                  <td>Programming Fundamentals</td>
+                  <td>3</td>
+                  <td><strong>B+</strong></td>
+                  <td>Dr. John Smith</td>
+                </tr>
+                <tr>
+                  <td>CS201</td>
+                  <td>Database Management Systems</td>
+                  <td>4</td>
+                  <td><strong>A-</strong></td>
+                  <td>Dr. Sarah Johnson</td>
+                </tr>
+                <tr>
+                  <td>CS301</td>
+                  <td>Web Development</td>
+                  <td>3</td>
+                  <td><strong>A</strong></td>
+                  <td>Prof. Michael Chen</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Messages -->
+      <section id="messages" class="content-section">
+        <div class="section-header">
+          <h1>Messages</h1>
+          <p class="subtitle">Communicate with your instructors</p>
+        </div>
+
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; padding: 1.5rem;">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="padding: 1rem; background: var(--color-bg); border-radius: 0.65rem; display: flex; gap: 1rem; cursor: pointer; transition: all var(--transition);" onmouseover="this.style.background='var(--color-surface-offset)'" onmouseout="this.style.background='var(--color-bg)'">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(1, 105, 111, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="fas fa-user" style="color: var(--color-primary);"></i>
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <p style="font-weight: 700; margin-bottom: 0.25rem;">Dr. John Smith</p>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Great work on your recent assignment! Keep it up.</p>
+                <p style="font-size: 0.75rem; color: var(--color-text-faint);">2 hours ago</p>
+              </div>
+            </div>
+
+            <div style="padding: 1rem; background: var(--color-bg); border-radius: 0.65rem; display: flex; gap: 1rem; cursor: pointer; transition: all var(--transition);" onmouseover="this.style.background='var(--color-surface-offset)'" onmouseout="this.style.background='var(--color-bg)'">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(3, 105, 161, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="fas fa-user" style="color: var(--color-blue);"></i>
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <p style="font-weight: 700; margin-bottom: 0.25rem;">Dr. Sarah Johnson</p>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Your submission for Assignment 4 has been graded.</p>
+                <p style="font-size: 0.75rem; color: var(--color-text-faint);">1 day ago</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Submit Assignment Modal -->
+  <div id="submitAssignmentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Submit Assignment</h2>
+        <button class="modal-close" onclick="closeModal('submitAssignment')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="submitForm">
+          <div class="form-group">
+            <label>Upload File</label>
+            <div style="border: 2px dashed var(--color-border); border-radius: 0.65rem; padding: 2rem; text-align: center; cursor: pointer; transition: all var(--transition);" id="fileDropZone">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--color-primary); margin-bottom: 0.5rem; display: block;"></i>
+              <p style="font-weight: 600; margin-bottom: 0.25rem;">Drag & drop your file here</p>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted);">or click to browse</p>
+              <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx,.txt" />
+            </div>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.5rem;">Supported formats: PDF, DOCX, TXT (Max 10MB)</p>
+          </div>
+
+          <div class="form-group">
+            <label>Comments (Optional)</label>
+            <textarea placeholder="Add any comments about your submission..." rows="3" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; font-family: inherit;"></textarea>
+          </div>
+
+          <div style="background: rgba(67, 122, 34, 0.1); border-left: 4px solid var(--color-success); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;;">
+            <p style="font-size: 0.875rem; color: var(--color-text-muted);">
+              <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+              Your submission will be automatically analyzed for plagiarism. You'll receive a report within 5 minutes.
+            </p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('submitAssignment')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitAssignment()">Submit Assignment</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div style="text-align: center; padding: 2rem;">
+      <p>&copy; 2025 Plagiarism Detection System | UCS310 Project</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Student-specific functions
+    function submitAssignment() {
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files.length) {
+        alert('Please select a file to submit');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      formData.append('assignmentId', 1); // This would come from the clicked assignment
+
+      // Simulate submission
+      alert('Submission successful! Your assignment is being analyzed...');
+      closeModal('submitAssignment');
+    }
+
+    function downloadReport() {
+      alert('Downloading report...');
+    }
+
+    function shareReport() {
+      alert('Share functionality coming soon!');
+    }
+
+    function viewSubmissionDetails() {
+      showSection('reports');
+    }
+
+    // File drop zone
+    const fileDropZone = document.getElementById('fileDropZone');
+    const fileInput = document.getElementById('fileInput');
+
+    fileDropZone.addEventListener('click', () => fileInput.click());
+
+    fileDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileDropZone.style.background = 'rgba(1, 105, 111, 0.05)';
+    });
+
+    fileDropZone.addEventListener('dragleave', () => {
+      fileDropZone.style.background = '';
+    });
+
+    fileDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileInput.files = e.dataTransfer.files;
+      fileDropZone.style.background = '';
+    });
+  </script>
+</body>
+</html>

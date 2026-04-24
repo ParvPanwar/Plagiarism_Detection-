@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plagiarism Detection Platform</title>
+  <meta name="description" content="Large-scale frontend prototype for a plagiarism detection platform." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem;
+      --color-bg: #f7f6f2; --color-surface: #fbfaf7; --color-surface-2: #f3f0ea; --color-surface-3: #ece8e1; --color-border: #d7d2ca; --color-divider: #e1ddd7;
+      --color-text: #26231d; --color-text-muted: #6f6b64; --color-text-faint: #a49f97; --color-text-inverse: #faf8f4;
+      --color-primary: #01696f; --color-primary-hover: #0a555a; --color-primary-soft: #d7e7e4;
+      --color-success: #3d7a22; --color-success-soft: #d8e7d0;
+      --color-warning: #a35a20; --color-warning-soft: #eedfcf;
+      --color-error: #a22f75; --color-error-soft: #efd8e4;
+      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06); --shadow-md: 0 8px 24px oklch(0.2 0.01 80 / 0.08); --shadow-lg: 0 20px 44px oklch(0.2 0.01 80 / 0.12);
+      --radius-sm: 0.5rem; --radius-md: 0.875rem; --radius-lg: 1.15rem; --radius-xl: 1.5rem; --radius-full: 9999px;
+      --font-body: 'Satoshi', 'Inter', sans-serif;
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-theme="dark"] {
+      --color-bg: #161513; --color-surface: #1d1b18; --color-surface-2: #24211e; --color-surface-3: #2d2925; --color-border: #393530; --color-divider: #2a2723;
+      --color-text: #d8d3cd; --color-text-muted: #9c958d; --color-text-faint: #6c665f; --color-text-inverse: #161513;
+      --color-primary: #59a3ad; --color-primary-hover: #7ab7bf; --color-primary-soft: #27373a;
+      --color-success: #77b653; --color-success-soft: #2a3623;
+      --color-warning: #d8935e; --color-warning-soft: #3a3028;
+      --color-error: #d46aa8; --color-error-soft: #392833;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.18); --shadow-md: 0 8px 24px oklch(0 0 0 / 0.28); --shadow-lg: 0 20px 44px oklch(0 0 0 / 0.42);
+    }
+
+    * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: var(--font-body); font-size: var(--text-base); line-height: 1.55;
+      background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    input, select, textarea {
+      border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent);
+      background: var(--color-surface); border-radius: var(--radius-sm); padding: 0.82rem 0.95rem;
+      outline: none; min-height: 44px;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 18%, transparent); }
+    a { color: inherit; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.9rem 1rem; border-bottom: 1px solid var(--color-divider); vertical-align: top; }
+    th { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); font-weight: 700; }
+    td { font-size: var(--text-sm); color: var(--color-text); }
+    h1 { font-size: var(--text-xl); line-height: 1.1; }
+    h2 { font-size: var(--text-lg); line-height: 1.15; }
+    h3 { font-size: var(--text-base); line-height: 1.2; }
+    p { color: var(--color-text-muted); }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: 0.35rem; }
+    .tabular { font-variant-numeric: tabular-nums lining-nums; }
+    .hide { display: none !important; }
+
+    .dashboard {
+      display: grid; grid-template-columns: 288px 1fr; grid-template-rows: 72px 1fr; height: 100dvh;
+    }
+    .sidebar {
+      grid-row: 1 / -1; background: color-mix(in oklab, var(--color-surface) 92%, white);
+      border-right: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+      overflow-y: auto; overscroll-behavior: contain; padding: var(--space-5);
+    }
+    .header {
+      grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+      padding: 0 var(--space-5); border-bottom: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+      background: color-mix(in oklab, var(--color-bg) 88%, transparent); backdrop-filter: blur(18px); position: sticky; top: 0; z-index: 10;
+    }
+    .main {
+      grid-column: 2; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-5);
+    }
+
+    .brand {
+      display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);
+    }
+    .brand-mark {
+      width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; color: var(--color-text-inverse);
+      background: linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 65%, black)); box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+    .brand-copy strong { display: block; font-size: var(--text-sm); }
+    .brand-copy span { display: block; font-size: var(--text-xs); color: var(--color-text-muted); }
+
+    .nav-group { display: grid; gap: 0.35rem; margin-top: var(--space-5); }
+    .nav-label { font-size: var(--text-xs); color: var(--color-text-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .nav-btn {
+      width: 100%; min-height: 46px; border-radius: var(--radius-md); display: flex; align-items: center; gap: var(--space-3);
+      padding: 0.75rem 0.9rem; color: var(--color-text-muted); font-size: var(--text-sm); font-weight: 700; text-align: left;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+    .nav-btn:hover { background: var(--color-surface-2); color: var(--color-text); }
+    .nav-btn.active { background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface)); color: var(--color-primary); }
+    .nav-icon { width: 18px; height: 18px; display: inline-grid; place-items: center; }
+
+    .header-left, .header-right { display: flex; align-items: center; gap: var(--space-3); }
+    .search-wrap { position: relative; min-width: min(100%, 340px); }
+    .search-wrap input { width: 100%; padding-left: 2.6rem; background: var(--color-surface); }
+    .search-wrap svg { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--color-text-faint); }
+
+    .btn { min-height: 44px; border-radius: var(--radius-full); padding: 0 1rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: var(--text-sm); font-weight: 700; }
+    .btn-primary { background: var(--color-primary); color: var(--color-text-inverse); box-shadow: var(--shadow-md); }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary { background: var(--color-surface); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); }
+    .btn-ghost { background: transparent; border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); }
+    .theme-toggle, .menu-toggle {
+      width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--color-surface);
+      border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent);
+    }
+    .menu-toggle { display: none; }
+
+    .page { display: none; gap: var(--space-5); }
+    .page.active { display: grid; }
+    .page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); flex-wrap: wrap; }
+    .page-meta { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3); }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.7rem; border-radius: var(--radius-full);
+      font-size: var(--text-xs); font-weight: 700;
+      background: var(--color-surface-2); color: var(--color-text-muted); border: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+    }
+    .pill.success { background: var(--color-success-soft); color: var(--color-success); }
+    .pill.warning { background: var(--color-warning-soft); color: var(--color-warning); }
+    .pill.error { background: var(--color-error-soft); color: var(--color-error); }
+    .pill.primary { background: var(--color-primary-soft); color: var(--color-primary); }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+    .panel {
+      background: color-mix(in oklab, var(--color-surface) 94%, white);
+      border: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+    }
+    .panel-pad { padding: var(--space-5); }
+    .kpi-card strong { display: block; font-size: var(--text-xl); margin-top: 0.35rem; }
+    .kpi-card p { margin-top: 0.4rem; font-size: var(--text-sm); }
+
+    .layout-2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--space-4); }
+    .layout-3 { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: var(--space-4); }
+    .toolbar { display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; }
+    .toolbar .field { min-width: 180px; flex: 1 1 180px; }
+    .field label { display: block; font-size: var(--text-xs); color: var(--color-text-muted); font-weight: 700; margin-bottom: 0.35rem; }
+    .field input, .field select, .field textarea { width: 100%; }
+    .field textarea { min-height: 160px; resize: vertical; }
+
+    .list { display: grid; gap: var(--space-3); }
+    .list-item {
+      display: grid; gap: 0.55rem; padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md);
+      border: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+    }
+    .list-top { display: flex; justify-content: space-between; gap: var(--space-3); align-items: flex-start; flex-wrap: wrap; }
+    .muted { color: var(--color-text-muted); }
+    .faint { color: var(--color-text-faint); }
+
+    .chart-bars { display: grid; gap: 0.85rem; }
+    .bar-row { display: grid; grid-template-columns: 140px 1fr 56px; gap: 0.75rem; align-items: center; }
+    .bar-track { height: 11px; border-radius: 999px; background: var(--color-surface-3); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 75%, black)); }
+
+    .table-wrap { overflow: auto; }
+    .table-wrap::-webkit-scrollbar, .main::-webkit-scrollbar, .sidebar::-webkit-scrollbar { height: 10px; width: 10px; }
+    .table-wrap::-webkit-scrollbar-thumb, .main::-webkit-scrollbar-thumb, .sidebar::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--color-text) 14%, transparent); border-radius: 999px; }
+    tr:hover td { background: color-mix(in oklab, var(--color-primary) 3%, var(--color-surface)); }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 14, 13, 0.45); backdrop-filter: blur(10px);
+      display: none; align-items: center; justify-content: center; padding: var(--space-4); z-index: 100;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(760px, 100%); max-height: 90vh; overflow: auto; background: var(--color-bg);
+      border: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);
+    }
+    .modal-head, .modal-body, .modal-foot { padding: var(--space-5); }
+    .modal-head, .modal-foot { border-bottom: 1px solid var(--color-divider); }
+    .modal-foot { border-top: 1px solid var(--color-divider); border-bottom: none; display: flex; justify-content: flex-end; gap: var(--space-3); }
+
+    .toast-stack { position: fixed; right: 1rem; bottom: 1rem; z-index: 120; display: grid; gap: 0.75rem; width: min(340px, calc(100vw - 2rem)); }
+    .toast {
+      padding: 0.95rem 1rem; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent); box-shadow: var(--shadow-md);
+      font-size: var(--text-sm);
+    }
+
+    .empty {
+      display: grid; place-items: center; text-align: center; min-height: 240px; gap: var(--space-3);
+      color: var(--color-text-muted);
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard { grid-template-columns: 88px 1fr; }
+      .brand-copy, .nav-btn span:last-child, .sidebar-footer, .nav-label { display: none; }
+      .nav-btn { justify-content: center; padding-inline: 0; }
+      .brand { justify-content: center; }
+      .bar-row { grid-template-columns: 100px 1fr 48px; }
+    }
+    @media (max-width: 860px) {
+      html, body { overflow: auto; }
+      .dashboard { grid-template-columns: 1fr; grid-template-rows: 72px auto 1fr; height: auto; min-height: 100vh; }
+      .sidebar {
+        grid-row: 2; grid-column: 1; border-right: none; border-bottom: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+        display: none;
+      }
+      .sidebar.mobile-open { display: block; }
+      .header, .main { grid-column: 1; }
+      .main { overflow: visible; }
+      .menu-toggle { display: grid; }
+      .kpi-grid, .layout-2, .layout-3 { grid-template-columns: 1fr; }
+      .header { padding: 0 1rem; }
+      .search-wrap { min-width: 0; width: 100%; }
+      .header-left { flex: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 7.5C5 6.12 6.12 5 7.5 5H11.2C12.06 5 12.86 5.44 13.32 6.17L14.08 7.38C14.54 8.11 15.34 8.55 16.2 8.55H16.5C17.88 8.55 19 9.67 19 11.05V16.5C19 17.88 17.88 19 16.5 19H7.5C6.12 19 5 17.88 5 16.5V7.5Z" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M8.4 14.1L10.6 11.9L12.3 13.6L15.8 10.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-copy">
+          <strong>Plagiarix</strong>
+          <span>Detection Platform</span>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Workspace</div>
+        <button class="nav-btn active" data-route="overview"><span class="nav-icon">⌂</span><span>Overview</span></button>
+        <button class="nav-btn" data-route="submissions"><span class="nav-icon">▤</span><span>Submissions</span></button>
+        <button class="nav-btn" data-route="analysis"><span class="nav-icon">◫</span><span>Analysis</span></button>
+        <button class="nav-btn" data-route="reports"><span class="nav-icon">▣</span><span>Reports</span></button>
+        <button class="nav-btn" data-route="students"><span class="nav-icon">◎</span><span>Students</span></button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Actions</div>
+        <button class="nav-btn" id="openNewSubmission"><span class="nav-icon">＋</span><span>New Submission</span></button>
+        <button class="nav-btn" id="runAnalysisNow"><span class="nav-icon">↻</span><span>Run Detection</span></button>
+        <button class="nav-btn" id="openShortcuts"><span class="nav-icon">?</span><span>Shortcuts</span></button>
+      </div>
+
+      <div class="nav-group sidebar-footer" style="margin-top: var(--space-8);">
+        <div class="panel panel-pad">
+          <div class="pill primary">Scalable UI Demo</div>
+          <p style="margin-top: 0.75rem; font-size: var(--text-sm);">Ready for local hosting and evaluator demo with in-memory workflow.</p>
+        </div>
+      </div>
+    </aside>
+
+    <header class="header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <div class="search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="globalSearch" type="search" placeholder="Search submissions, students, reports" />
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch theme">◐</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="page active" id="page-overview">
+        <div class="page-head">
+          <div>
+            <h1>Detection overview</h1>
+            <p>Monitor submissions, run plagiarism checks, and review high-risk pairs from one dashboard.</p>
+            <div class="page-meta">
+              <span class="pill primary">UCS310 dataset</span>
+              <span class="pill">Updated <span id="lastUpdatedLabel">just now</span></span>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-primary" id="heroRunBtn">Run detection</button>
+            <button class="btn btn-secondary" id="heroSubmissionBtn">Add submission</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <div class="layout-2">
+          <section class="panel panel-pad">
+            <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap; margin-bottom: 1rem;">
+              <div>
+                <h2>Assignment risk map</h2>
+                <p>Similarity concentration by assignment.</p>
+              </div>
+              <span class="pill warning" id="highRiskCountPill">0 high-risk pairs</span>
+            </div>
+            <div class="chart-bars" id="riskBars"></div>
+          </section>
+
+          <section class="panel panel-pad">
+            <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap; margin-bottom: 1rem;">
+              <div>
+                <h2>Queue summary</h2>
+                <p>Items awaiting faculty action.</p>
+              </div>
+              <span class="pill">Live demo state</span>
+            </div>
+            <div class="list" id="queueSummary"></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="panel-pad" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap;">
+            <div>
+              <h2>Recent reports</h2>
+              <p>Latest flagged and reviewed comparison pairs.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Students</th><th>Assignment</th><th>Similarity</th><th>Status</th><th>Updated</th></tr>
+              </thead>
+              <tbody id="recentReportsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-submissions">
+        <div class="page-head">
+          <div>
+            <h1>Submission center</h1>
+            <p>Create, browse, and filter student submissions across assignments.</p>
+          </div>
+          <button class="btn btn-primary" id="submissionsAddBtn">New submission</button>
+        </div>
+
+        <section class="panel panel-pad">
+          <div class="toolbar">
+            <div class="field"><label for="assignmentFilter">Assignment</label><select id="assignmentFilter"></select></div>
+            <div class="field"><label for="flagFilter">Risk flag</label><select id="flagFilter"><option value="all">All</option><option value="flagged">Flagged</option><option value="clear">Clear</option></select></div>
+            <div class="field"><label for="submissionSearch">Search text</label><input id="submissionSearch" type="search" placeholder="Search by name, roll no, content" /></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Assignment</th><th>Words</th><th>Flag</th><th>Submitted</th><th>Action</th></tr>
+              </thead>
+              <tbody id="submissionTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-analysis">
+        <div class="page-head">
+          <div>
+            <h1>Analysis engine</h1>
+            <p>Run token-based comparison logic and inspect risky submission pairs.</p>
+          </div>
+          <button class="btn btn-primary" id="analysisRunBtn">Run now</button>
+        </div>
+
+        <div class="layout-3">
+          <section class="panel panel-pad">
+            <h2>Engine stages</h2>
+            <div class="list" id="engineStages" style="margin-top: 1rem;"></div>
+          </section>
+          <section class="panel panel-pad">
+            <h2>Similarity thresholds</h2>
+            <div class="list" style="margin-top: 1rem;">
+              <div class="list-item"><div class="list-top"><strong>High risk</strong><span class="pill error">≥ 70%</span></div><p>Automatic review priority and flagged submissions.</p></div>
+              <div class="list-item"><div class="list-top"><strong>Medium risk</strong><span class="pill warning">40% – 69%</span></div><p>Needs manual inspection and comparison notes.</p></div>
+              <div class="list-item"><div class="list-top"><strong>Low risk</strong><span class="pill success">&lt; 40%</span></div><p>Usually acceptable overlap or unrelated work.</p></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="panel-pad" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+            <div>
+              <h2>Pairwise comparison output</h2>
+              <p>Ordered pairs generated from selected assignment submissions.</p>
+            </div>
+            <div class="toolbar" style="min-width:260px;">
+              <div class="field" style="min-width: 220px;"><label for="pairAssignmentFilter">Assignment</label><select id="pairAssignmentFilter"></select></div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Pair</th><th>Assignment</th><th>Common tokens</th><th>Similarity</th><th>Risk</th></tr>
+              </thead>
+              <tbody id="pairwiseTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-reports">
+        <div class="page-head">
+          <div>
+            <h1>Reports and review</h1>
+            <p>Track plagiarism reports, update review status, and export records.</p>
+          </div>
+          <div class="toolbar">
+            <div class="field" style="min-width: 190px;"><label for="reportStatusFilter">Report status</label><select id="reportStatusFilter"><option value="all">All</option><option value="PENDING">Pending</option><option value="REVIEWED">Reviewed</option><option value="DISMISSED">Dismissed</option></select></div>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Report ID</th><th>Students</th><th>Assignment</th><th>Similarity</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="reportTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-students">
+        <div class="page-head">
+          <div>
+            <h1>Student summary</h1>
+            <p>View submission count, flagged work, and average word volume per student.</p>
+          </div>
+        </div>
+
+        <div class="layout-2">
+          <section class="panel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Student</th><th>Roll no</th><th>Total submissions</th><th>Flagged</th><th>Average words</th></tr>
+                </thead>
+                <tbody id="studentSummaryBody"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="panel panel-pad">
+            <h2>Review guidance</h2>
+            <div class="list" style="margin-top: 1rem;">
+              <div class="list-item"><strong>Use filtered reports first</strong><p>Sort high similarity pairs before detailed checking.</p></div>
+              <div class="list-item"><strong>Check repeated tokens</strong><p>Overlap patterns often reveal copied normalization or SQL answers.</p></div>
+              <div class="list-item"><strong>Export evidence</strong><p>Use CSV export for panel records or faculty discussion.</p></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="submissionModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="submissionModalTitle">
+      <div class="modal-head" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">
+        <div>
+          <h2 id="submissionModalTitle">Create submission</h2>
+          <p>Add a student response and simulate tokenization-ready storage.</p>
+        </div>
+        <button class="btn btn-ghost" data-close-modal>Close</button>
+      </div>
+      <div class="modal-body">
+        <form id="submissionForm" class="list">
+          <div class="field">
+            <label for="studentSelect">Student</label>
+            <select id="studentSelect" required></select>
+          </div>
+          <div class="field">
+            <label for="assignmentSelect">Assignment</label>
+            <select id="assignmentSelect" required></select>
+          </div>
+          <div class="field">
+            <label for="submissionText">Submission text</label>
+            <textarea id="submissionText" required placeholder="Paste the student's answer here..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary" data-close-modal type="button">Cancel</button>
+        <button class="btn btn-primary" id="saveSubmissionBtn" type="submit" form="submissionForm">Save submission</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="shortcutsBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+      <div class="modal-head" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">
+        <h2 id="shortcutsTitle">Keyboard shortcuts</h2>
+        <button class="btn btn-ghost" data-close-shortcuts>Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="list">
+          <div class="list-item"><div class="list-top"><strong>G then O</strong><span class="pill">Overview</span></div><p>Jump to dashboard overview.</p></div>
+          <div class="list-item"><div class="list-top"><strong>G then S</strong><span class="pill">Submissions</span></div><p>Open submission center.</p></div>
+          <div class="list-item"><div class="list-top"><strong>G then R</strong><span class="pill">Reports</span></div><p>Open report management.</p></div>
+          <div class="list-item"><div class="list-top"><strong>N</strong><span class="pill">New</span></div><p>Create a new submission.</p></div>
+          <div class="list-item"><div class="list-top"><strong>/</strong><span class="pill">Search</span></div><p>Focus global search.</p></div>
+          <div class="list-item"><div class="list-top"><strong>?</strong><span class="pill">Help</span></div><p>Open shortcut guide.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script>
+    const appState = {
+      theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      route: 'overview',
+      queuedGoKey: null,
+      assignments: [
+        { id: 1, title: 'ER Diagram and Normalization', dueDate: '2025-10-15', maxMarks: 30 },
+        { id: 2, title: 'SQL Query Implementation', dueDate: '2025-11-10', maxMarks: 40 },
+        { id: 3, title: 'Transactions and Concurrency', dueDate: '2025-12-05', maxMarks: 30 }
+      ],
+      students: [
+        { id: 1, name: 'Parv Panwar', rollNo: '1024030226', email: 'parv.panwar@thapar.edu' },
+        { id: 2, name: 'Manan Dhingra', rollNo: '1024030222', email: 'manan.dhingra@thapar.edu' },
+        { id: 3, name: 'Ayesha Khan', rollNo: '1024030201', email: 'ayesha.khan@thapar.edu' },
+        { id: 4, name: 'Rohan Mehra', rollNo: '1024030210', email: 'rohan.mehra@thapar.edu' },
+        { id: 5, name: 'Simran Bhatia', rollNo: '1024030215', email: 'simran.bhatia@thapar.edu' },
+        { id: 6, name: 'Karan Gupta', rollNo: '1024030230', email: 'karan.gupta@thapar.edu' }
+      ],
+      submissions: [
+        { id: 1, studentId: 1, assignmentId: 1, text: 'An ER diagram represents entities attributes and relationships in a database system. Normalization removes redundancy and ensures data integrity using 1NF 2NF and 3NF forms.', submittedAt: '2026-04-23 07:30', wordCount: 30, isFlagged: false },
+        { id: 2, studentId: 2, assignmentId: 1, text: 'ER diagram represents entities attributes relationships in database. Normalization removes redundancy ensures data integrity using 1NF 2NF 3NF forms to avoid anomalies.', submittedAt: '2026-04-23 07:35', wordCount: 28, isFlagged: false },
+        { id: 3, studentId: 3, assignmentId: 1, text: 'Entity relationship diagram models the data and its associations. We convert it into relational tables and apply normalization to eliminate data redundancy in the schema.', submittedAt: '2026-04-23 07:42', wordCount: 29, isFlagged: false },
+        { id: 4, studentId: 4, assignmentId: 1, text: 'Database design starts with identifying entities and their attributes. The ER model is then mapped to relational tables and normalized to achieve consistency and reduce redundancy.', submittedAt: '2026-04-23 07:48', wordCount: 30, isFlagged: false },
+        { id: 5, studentId: 5, assignmentId: 1, text: 'An entity relationship diagram shows how data is structured in a relational database. Normalization removes redundancy and maintains data integrity through normal forms.', submittedAt: '2026-04-23 07:51', wordCount: 29, isFlagged: false },
+        { id: 6, studentId: 6, assignmentId: 2, text: 'SQL is a language for managing relational databases. Queries like SELECT JOIN and GROUP BY help retrieve and manipulate data stored in multiple related tables effectively.', submittedAt: '2026-04-23 08:02', wordCount: 27, isFlagged: false }
+      ],
+      reports: [],
+      lastRunAt: null
+    };
+
+    const els = {
+      body: document.documentElement,
+      sidebar: document.getElementById('sidebar'),
+      menuToggle: document.getElementById('menuToggle'),
+      themeToggle: document.getElementById('themeToggle'),
+      globalSearch: document.getElementById('globalSearch'),
+      pages: [...document.querySelectorAll('.page')],
+      navBtns: [...document.querySelectorAll('.nav-btn[data-route]')],
+      kpiGrid: document.getElementById('kpiGrid'),
+      riskBars: document.getElementById('riskBars'),
+      queueSummary: document.getElementById('queueSummary'),
+      recentReportsBody: document.getElementById('recentReportsBody'),
+      submissionTableBody: document.getElementById('submissionTableBody'),
+      pairwiseTableBody: document.getElementById('pairwiseTableBody'),
+      reportTableBody: document.getElementById('reportTableBody'),
+      studentSummaryBody: document.getElementById('studentSummaryBody'),
+      assignmentFilter: document.getElementById('assignmentFilter'),
+      pairAssignmentFilter: document.getElementById('pairAssignmentFilter'),
+      flagFilter: document.getElementById('flagFilter'),
+      reportStatusFilter: document.getElementById('reportStatusFilter'),
+      submissionSearch: document.getElementById('submissionSearch'),
+      submissionModalBackdrop: document.getElementById('submissionModalBackdrop'),
+      shortcutsBackdrop: document.getElementById('shortcutsBackdrop'),
+      submissionForm: document.getElementById('submissionForm'),
+      studentSelect: document.getElementById('studentSelect'),
+      assignmentSelect: document.getElementById('assignmentSelect'),
+      submissionText: document.getElementById('submissionText'),
+      toastStack: document.getElementById('toastStack'),
+      lastUpdatedLabel: document.getElementById('lastUpdatedLabel'),
+      highRiskCountPill: document.getElementById('highRiskCountPill'),
+      engineStages: document.getElementById('engineStages')
+    };
+
+    function nowStamp() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+
+    function tokenize(text) {
+      return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    }
+
+    function uniqueCommonTokenCount(a, b) {
+      const setA = new Set(tokenize(a));
+      const setB = new Set(tokenize(b));
+      let count = 0;
+      setA.forEach(token => { if (setB.has(token)) count += 1; });
+      return count;
+    }
+
+    function tokenCount(text) {
+      return new Set(tokenize(text)).size;
+    }
+
+    function similarityPct(a, b) {
+      const common = uniqueCommonTokenCount(a, b);
+      const minTokens = Math.min(tokenCount(a), tokenCount(b)) || 1;
+      return Number(((common / minTokens) * 100).toFixed(2));
+    }
+
+    function riskLevel(similarity) {
+      if (similarity >= 70) return 'HIGH';
+      if (similarity >= 40) return 'MEDIUM';
+      return 'LOW';
+    }
+
+    function getStudent(id) { return appState.students.find(s => s.id === id); }
+    function getAssignment(id) { return appState.assignments.find(a => a.id === id); }
+
+    function populateStaticOptions() {
+      const assignmentOptions = ['<option value="all">All assignments</option>']
+        .concat(appState.assignments.map(a => `<option value="${a.id}">${a.title}</option>`)).join('');
+      els.assignmentFilter.innerHTML = assignmentOptions;
+      els.pairAssignmentFilter.innerHTML = appState.assignments.map(a => `<option value="${a.id}">${a.title}</option>`).join('');
+      els.assignmentSelect.innerHTML = appState.assignments.map(a => `<option value="${a.id}">${a.title}</option>`).join('');
+      els.studentSelect.innerHTML = appState.students.map(s => `<option value="${s.id}">${s.name} (${s.rollNo})</option>`).join('');
+    }
+
+    function setTheme(theme) {
+      appState.theme = theme;
+      els.body.setAttribute('data-theme', theme);
+      els.themeToggle.textContent = theme === 'dark' ? '☾' : '◐';
+    }
+
+    function goTo(route) {
+      appState.route = route;
+      location.hash = route;
+      els.pages.forEach(page => page.classList.toggle('active', page.id === `page-${route}`));
+      els.navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.route === route));
+      if (window.innerWidth <= 860) els.sidebar.classList.remove('mobile-open');
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      els.toastStack.appendChild(toast);
+      setTimeout(() => toast.remove(), 3200);
+    }
+
+    function runAnalysis() {
+      const reports = [];
+      appState.submissions.forEach(s => { s.isFlagged = false; });
+      let reportId = 1;
+      appState.assignments.forEach(assignment => {
+        const subs = appState.submissions.filter(s => s.assignmentId === assignment.id);
+        for (let i = 0; i < subs.length; i += 1) {
+          for (let j = i + 1; j < subs.length; j += 1) {
+            const sub1 = subs[i];
+            const sub2 = subs[j];
+            const similarity = similarityPct(sub1.text, sub2.text);
+            const level = riskLevel(similarity);
+            if (similarity > 0) {
+              reports.push({
+                id: reportId++,
+                submission1Id: sub1.id,
+                submission2Id: sub2.id,
+                assignmentId: assignment.id,
+                commonTokens: uniqueCommonTokenCount(sub1.text, sub2.text),
+                similarity,
+                risk: level,
+                status: level === 'HIGH' ? 'PENDING' : 'REVIEWED',
+                updatedAt: nowStamp()
+              });
+            }
+            if (level === 'HIGH') {
+              sub1.isFlagged = true;
+              sub2.isFlagged = true;
+            }
+          }
+        }
+      });
+      appState.reports = reports.sort((a, b) => b.similarity - a.similarity);
+      appState.lastRunAt = new Date();
+      renderAll();
+      showToast('Detection run complete. Reports refreshed.');
+    }
+
+    function renderOverview() {
+      const totalSubmissions = appState.submissions.length;
+      const totalReports = appState.reports.length;
+      const flagged = appState.submissions.filter(s => s.isFlagged).length;
+      const highRisk = appState.reports.filter(r => r.risk === 'HIGH').length;
+      const kpis = [
+        { label: 'Total submissions', value: totalSubmissions, note: 'Across all assignments' },
+        { label: 'Generated reports', value: totalReports, note: 'Pairwise similarity results' },
+        { label: 'Flagged submissions', value: flagged, note: 'High-risk records only' },
+        { label: 'High-risk pairs', value: highRisk, note: 'Need faculty review' }
+      ];
+      els.kpiGrid.innerHTML = kpis.map(kpi => `
+        <article class="panel panel-pad kpi-card">
+          <span class="pill">${kpi.label}</span>
+          <strong class="tabular">${kpi.value}</strong>
+          <p>${kpi.note}</p>
+        </article>
+      `).join('');
+
+      const bars = appState.assignments.map(assignment => {
+        const reports = appState.reports.filter(r => r.assignmentId === assignment.id);
+        const max = Math.max(...appState.assignments.map(a => appState.reports.filter(r => r.assignmentId === a.id).reduce((sum, r) => sum + r.similarity, 0)), 1);
+        const value = reports.reduce((sum, r) => sum + r.similarity, 0);
+        const pct = Math.max(8, (value / max) * 100 || 8);
+        return `
+          <div class="bar-row">
+            <span class="muted">A${assignment.id}</span>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+            <strong class="tabular">${Math.round(value)}</strong>
+          </div>
+        `;
+      }).join('');
+      els.riskBars.innerHTML = bars || '<div class="empty"><p>No assignment data available.</p></div>';
+
+      const pending = appState.reports.filter(r => r.status === 'PENDING').length;
+      const reviewed = appState.reports.filter(r => r.status === 'REVIEWED').length;
+      const dismissed = appState.reports.filter(r => r.status === 'DISMISSED').length;
+      els.queueSummary.innerHTML = [
+        { title: 'Pending reviews', count: pending, tone: 'warning', text: 'Reports waiting for faculty action.' },
+        { title: 'Reviewed reports', count: reviewed, tone: 'success', text: 'Pairs already checked by reviewer.' },
+        { title: 'Dismissed reports', count: dismissed, tone: 'primary', text: 'Pairs cleared after inspection.' }
+      ].map(item => `
+        <div class="list-item">
+          <div class="list-top"><strong>${item.title}</strong><span class="pill ${item.tone} tabular">${item.count}</span></div>
+          <p>${item.text}</p>
+        </div>
+      `).join('');
+
+      els.recentReportsBody.innerHTML = appState.reports.slice(0, 6).map(reportRow).join('') || '<tr><td colspan="5"><div class="empty"><p>Run detection to generate reports.</p></div></td></tr>';
+      els.highRiskCountPill.textContent = `${highRisk} high-risk pairs`;
+      els.lastUpdatedLabel.textContent = appState.lastRunAt ? appState.lastRunAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'not run yet';
+    }
+
+    function reportRow(report) {
+      const sub1 = appState.submissions.find(s => s.id === report.submission1Id);
+      const sub2 = appState.submissions.find(s => s.id === report.submission2Id);
+      const s1 = getStudent(sub1.studentId);
+      const s2 = getStudent(sub2.studentId);
+      const assignment = getAssignment(report.assignmentId);
+      return `<tr>
+        <td><strong>${s1.name}</strong><br><span class="muted">${s1.rollNo} vs ${s2.rollNo}</span></td>
+        <td>${assignment.title}</td>
+        <td><span class="pill ${report.risk === 'HIGH' ? 'error' : report.risk === 'MEDIUM' ? 'warning' : 'success'} tabular">${report.similarity}%</span></td>
+        <td>${report.status}</td>
+        <td class="muted">${report.updatedAt}</td>
+      </tr>`;
+    }
+
+    function renderSubmissions() {
+      const search = els.submissionSearch.value.trim().toLowerCase();
+      const assignmentFilter = els.assignmentFilter.value;
+      const flagFilter = els.flagFilter.value;
+      const globalSearch = els.globalSearch.value.trim().toLowerCase();
+      const rows = appState.submissions.filter(sub => {
+        const student = getStudent(sub.studentId);
+        const assignment = getAssignment(sub.assignmentId);
+        const searchable = `${student.name} ${student.rollNo} ${assignment.title} ${sub.text}`.toLowerCase();
+        const matchAssignment = assignmentFilter === 'all' || Number(assignmentFilter) === sub.assignmentId;
+        const matchFlag = flagFilter === 'all' || (flagFilter === 'flagged' ? sub.isFlagged : !sub.isFlagged);
+        const matchSearch = !search || searchable.includes(search);
+        const matchGlobal = !globalSearch || searchable.includes(globalSearch);
+        return matchAssignment && matchFlag && matchSearch && matchGlobal;
+      });
+
+      els.submissionTableBody.innerHTML = rows.map(sub => {
+        const student = getStudent(sub.studentId);
+        const assignment = getAssignment(sub.assignmentId);
+        return `<tr>
+          <td><strong>${student.name}</strong><br><span class="muted">${student.rollNo}</span></td>
+          <td>${assignment.title}</td>
+          <td class="tabular">${sub.wordCount}</td>
+          <td><span class="pill ${sub.isFlagged ? 'error' : 'success'}">${sub.isFlagged ? 'Flagged' : 'Clear'}</span></td>
+          <td class="muted">${sub.submittedAt}</td>
+          <td><button class="btn btn-ghost" data-preview-submission="${sub.id}">Preview</button></td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6"><div class="empty"><p>No submissions match the current filters.</p></div></td></tr>';
+    }
+
+    function renderAnalysis() {
+      els.engineStages.innerHTML = [
+        'Fetch assignment submissions',
+        'Tokenize submission text',
+        'Count common tokens',
+        'Compute similarity score',
+        'Generate report pairs',
+        'Flag high-risk records'
+      ].map((step, index) => `<div class="list-item"><div class="list-top"><strong>Stage ${index + 1}</strong><span class="pill">Engine</span></div><p>${step}</p></div>`).join('');
+
+      const assignmentId = Number(els.pairAssignmentFilter.value || 1);
+      const filtered = appState.reports.filter(r => r.assignmentId === assignmentId);
+      els.pairwiseTableBody.innerHTML = filtered.map(report => {
+        const sub1 = appState.submissions.find(s => s.id === report.submission1Id);
+        const sub2 = appState.submissions.find(s => s.id === report.submission2Id);
+        const s1 = getStudent(sub1.studentId);
+        const s2 = getStudent(sub2.studentId);
+        return `<tr>
+          <td><strong>${s1.rollNo}</strong> vs <strong>${s2.rollNo}</strong></td>
+          <td>${getAssignment(report.assignmentId).title}</td>
+          <td class="tabular">${report.commonTokens}</td>
+          <td><span class="pill ${report.risk === 'HIGH' ? 'error' : report.risk === 'MEDIUM' ? 'warning' : 'success'} tabular">${report.similarity}%</span></td>
+          <td>${report.risk}</td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="5"><div class="empty"><p>No comparison rows for this assignment.</p></div></td></tr>';
+    }
+
+    function renderReports() {
+      const status = els.reportStatusFilter.value;
+      const globalSearch = els.globalSearch.value.trim().toLowerCase();
+      const rows = appState.reports.filter(report => {
+        const sub1 = appState.submissions.find(s => s.id === report.submission1Id);
+        const sub2 = appState.submissions.find(s => s.id === report.submission2Id);
+        const s1 = getStudent(sub1.studentId);
+        const s2 = getStudent(sub2.studentId);
+        const assignment = getAssignment(report.assignmentId);
+        const searchable = `${s1.name} ${s2.name} ${s1.rollNo} ${s2.rollNo} ${assignment.title} ${report.status}`.toLowerCase();
+        const matchStatus = status === 'all' || report.status === status;
+        const matchGlobal = !globalSearch || searchable.includes(globalSearch);
+        return matchStatus && matchGlobal;
+      });
+
+      els.reportTableBody.innerHTML = rows.map(report => {
+        const sub1 = appState.submissions.find(s => s.id === report.submission1Id);
+        const sub2 = appState.submissions.find(s => s.id === report.submission2Id);
+        const s1 = getStudent(sub1.studentId);
+        const s2 = getStudent(sub2.studentId);
+        return `<tr>
+          <td class="tabular">#${report.id}</td>
+          <td><strong>${s1.name}</strong><br><span class="muted">${s1.rollNo} vs ${s2.rollNo}</span></td>
+          <td>${getAssignment(report.assignmentId).title}</td>
+          <td><span class="pill ${report.risk === 'HIGH' ? 'error' : report.risk === 'MEDIUM' ? 'warning' : 'success'} tabular">${report.similarity}%</span></td>
+          <td>${report.status}</td>
+          <td>
+            <div class="toolbar">
+              <button class="btn btn-ghost" data-report-action="REVIEWED" data-report-id="${report.id}">Mark reviewed</button>
+              <button class="btn btn-ghost" data-report-action="DISMISSED" data-report-id="${report.id}">Dismiss</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6"><div class="empty"><p>No reports match the selected filter.</p></div></td></tr>';
+    }
+
+    function renderStudents() {
+      const rows = appState.students.map(student => {
+        const subs = appState.submissions.filter(s => s.studentId === student.id);
+        const avgWords = subs.length ? Math.round(subs.reduce((sum, s) => sum + s.wordCount, 0) / subs.length) : 0;
+        const flagged = subs.filter(s => s.isFlagged).length;
+        return `<tr>
+          <td><strong>${student.name}</strong><br><span class="muted">${student.email}</span></td>
+          <td>${student.rollNo}</td>
+          <td class="tabular">${subs.length}</td>
+          <td><span class="pill ${flagged ? 'error' : 'success'} tabular">${flagged}</span></td>
+          <td class="tabular">${avgWords}</td>
+        </tr>`;
+      });
+      els.studentSummaryBody.innerHTML = rows.join('');
+    }
+
+    function renderAll() {
+      renderOverview();
+      renderSubmissions();
+      renderAnalysis();
+      renderReports();
+      renderStudents();
+    }
+
+    function openSubmissionModal() {
+      els.submissionModalBackdrop.classList.add('open');
+      els.submissionModalBackdrop.setAttribute('aria-hidden', 'false');
+      els.submissionText.focus();
+    }
+
+    function closeSubmissionModal() {
+      els.submissionModalBackdrop.classList.remove('open');
+      els.submissionModalBackdrop.setAttribute('aria-hidden', 'true');
+      els.submissionForm.reset();
+      populateStaticOptions();
+    }
+
+    function openShortcutsModal() {
+      els.shortcutsBackdrop.classList.add('open');
+      els.shortcutsBackdrop.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeShortcutsModal() {
+      els.shortcutsBackdrop.classList.remove('open');
+      els.shortcutsBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    function createSubmission(e) {
+      e.preventDefault();
+      const studentId = Number(els.studentSelect.value);
+      const assignmentId = Number(els.assignmentSelect.value);
+      const text = els.submissionText.value.trim();
+      if (!text) return;
+      const exists = appState.submissions.some(s => s.studentId === studentId && s.assignmentId === assignmentId);
+      if (exists) {
+        showToast('Duplicate submission blocked for this student and assignment.');
+        return;
+      }
+      appState.submissions.push({
+        id: Math.max(...appState.submissions.map(s => s.id)) + 1,
+        studentId,
+        assignmentId,
+        text,
+        submittedAt: nowStamp(),
+        wordCount: tokenize(text).length,
+        isFlagged: false
+      });
+      closeSubmissionModal();
+      renderAll();
+      goTo('submissions');
+      showToast('New submission saved successfully.');
+    }
+
+    function updateReportStatus(reportId, status) {
+      const report = appState.reports.find(r => r.id === reportId);
+      if (!report) return;
+      report.status = status;
+      report.updatedAt = nowStamp();
+      renderAll();
+      showToast(`Report ${reportId} marked ${status.toLowerCase()}.`);
+    }
+
+    function exportCsv() {
+      const headers = ['ReportID','Student1','Roll1','Student2','Roll2','Assignment','Similarity','Risk','Status'];
+      const rows = appState.reports.map(report => {
+        const sub1 = appState.submissions.find(s => s.id === report.submission1Id);
+        const sub2 = appState.submissions.find(s => s.id === report.submission2Id);
+        const s1 = getStudent(sub1.studentId);
+        const s2 = getStudent(sub2.studentId);
+        const assignment = getAssignment(report.assignmentId);
+        return [report.id, s1.name, s1.rollNo, s2.name, s2.rollNo, assignment.title, report.similarity, report.risk, report.status]
+          .map(value => `"${String(value).replaceAll('"', '""')}"`).join(',');
+      });
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'plagiarism-reports.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('CSV export started.');
+    }
+
+    document.querySelectorAll('[data-route]').forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.route)));
+    document.getElementById('openNewSubmission').addEventListener('click', openSubmissionModal);
+    document.getElementById('heroSubmissionBtn').addEventListener('click', openSubmissionModal);
+    document.getElementById('submissionsAddBtn').addEventListener('click', openSubmissionModal);
+    document.getElementById('openShortcuts').addEventListener('click', openShortcutsModal);
+    document.getElementById('runAnalysisNow').addEventListener('click', runAnalysis);
+    document.getElementById('heroRunBtn').addEventListener('click', runAnalysis);
+    document.getElementById('analysisRunBtn').addEventListener('click', runAnalysis);
+    document.getElementById('exportCsvBtn').addEventListener('click', exportCsv);
+
+    els.assignmentFilter.addEventListener('change', renderSubmissions);
+    els.flagFilter.addEventListener('change', renderSubmissions);
+    els.submissionSearch.addEventListener('input', renderSubmissions);
+    els.reportStatusFilter.addEventListener('change', renderReports);
+    els.pairAssignmentFilter.addEventListener('change', renderAnalysis);
+    els.globalSearch.addEventListener('input', () => {
+      renderSubmissions();
+      renderReports();
+    });
+
+    els.submissionForm.addEventListener('submit', createSubmission);
+    els.themeToggle.addEventListener('click', () => setTheme(appState.theme === 'dark' ? 'light' : 'dark'));
+    els.menuToggle.addEventListener('click', () => els.sidebar.classList.toggle('mobile-open'));
+
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('[data-close-modal]') || e.target === els.submissionModalBackdrop) closeSubmissionModal();
+      if (e.target.matches('[data-close-shortcuts]') || e.target === els.shortcutsBackdrop) closeShortcutsModal();
+      if (e.target.matches('[data-report-action]')) updateReportStatus(Number(e.target.dataset.reportId), e.target.dataset.reportAction);
+      if (e.target.matches('[data-preview-submission]')) {
+        const sub = appState.submissions.find(s => s.id === Number(e.target.dataset.previewSubmission));
+        if (sub) {
+          alert(`${getStudent(sub.studentId).name} — ${getAssignment(sub.assignmentId).title}\n\n${sub.text}`);
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/') {
+        e.preventDefault();
+        els.globalSearch.focus();
+      }
+      if (e.key.toLowerCase() === 'n' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) openSubmissionModal();
+      if (e.key === '?') openShortcutsModal();
+      if (e.key.toLowerCase() === 'g') {
+        appState.queuedGoKey = true;
+        setTimeout(() => appState.queuedGoKey = null, 800);
+      } else if (appState.queuedGoKey) {
+        const map = { o: 'overview', s: 'submissions', r: 'reports', a: 'analysis' };
+        const target = map[e.key.toLowerCase()];
+        if (target) goTo(target);
+        appState.queuedGoKey = null;
+      }
+      if (e.key === 'Escape') {
+        closeSubmissionModal();
+        closeShortcutsModal();
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const route = location.hash.replace('#', '');
+      if (['overview','submissions','analysis','reports','students'].includes(route)) goTo(route);
+    });
+
+    populateStaticOptions();
+    setTheme(appState.theme);
+    runAnalysis();
+    if (location.hash) {
+      const route = location.hash.replace('#', '');
+      if (['overview','submissions','analysis','reports','students'].includes(route)) goTo(route);
+    }
+  </script>
+</body>
+</html>
