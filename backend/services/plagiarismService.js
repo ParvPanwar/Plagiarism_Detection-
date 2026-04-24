@@ -3,13 +3,17 @@
  * Core plagiarism detection algorithm
  */
 
+const fs = require('fs');
+const path = require('path');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 const { Submission, Report, Token } = require('../models');
 const { tokenize, calculateSimilarity } = require('../utils/plagiarismUtils');
 
 // Main analysis function
 async function analyzeSubmission(submissionId) {
   try {
-    const submission = await Submission.findById(submissionId);
+    const submission = await Submission.findById(submissionId).select('+rawText');
     if (!submission) throw new Error('Submission not found');
 
     // Extract text
@@ -20,13 +24,15 @@ async function analyzeSubmission(submissionId) {
     const wordCount = tokens.length;
 
     // Store tokens
-    await Token.insertMany(
-      tokens.map((token, idx) => ({
-        submissionId,
-        token,
-        position: idx
-      }))
-    );
+    if (tokens.length > 0) {
+      await Token.insertMany(
+        tokens.map((token, idx) => ({
+          submissionId,
+          token,
+          position: idx
+        }))
+      );
+    }
 
     // Find similar submissions
     const similarSubmissions = await findSimilarSubmissions(submissionId, tokens);
@@ -54,6 +60,7 @@ async function analyzeSubmission(submissionId) {
 
     // Update submission
     submission.status = 'completed';
+    submission.rawText = text;
     submission.wordCount = wordCount;
     submission.tokens = tokens.slice(0, 1000); // Store first 1000 tokens
     await submission.save();
@@ -75,6 +82,10 @@ async function findSimilarSubmissions(submissionId, tokens) {
   try {
     // Get tokens from other submissions in same assignment
     const currentSubmission = await Submission.findById(submissionId);
+    if (!currentSubmission || tokens.length === 0) {
+      return [];
+    }
+
     const similarTokens = await Token.aggregate([
       {
         $match: {
@@ -86,6 +97,22 @@ async function findSimilarSubmissions(submissionId, tokens) {
         $group: {
           _id: '$submissionId',
           matchCount: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'submissions',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'submission'
+        }
+      },
+      {
+        $unwind: '$submission'
+      },
+      {
+        $match: {
+          'submission.assignmentId': currentSubmission.assignmentId
         }
       },
       { $sort: { matchCount: -1 } },
@@ -102,9 +129,6 @@ async function findSimilarSubmissions(submissionId, tokens) {
 // Extract text from file
 async function extractTextFromFile(filePath) {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    
     const fullPath = path.join(__dirname, '..', filePath);
     
     if (!fs.existsSync(fullPath)) {
@@ -116,13 +140,14 @@ async function extractTextFromFile(filePath) {
     }
 
     if (filePath.endsWith('.pdf')) {
-      // PDF extraction would require pdfparse or similar library
-      return '';
+      const pdfBuffer = fs.readFileSync(fullPath);
+      const pdfContent = await pdfParse(pdfBuffer);
+      return pdfContent.text || '';
     }
 
     if (filePath.endsWith('.docx')) {
-      // DOCX extraction would require docx parser
-      return '';
+      const docxContent = await mammoth.extractRawText({ path: fullPath });
+      return docxContent.value || '';
     }
 
     return '';

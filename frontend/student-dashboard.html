@@ -178,73 +178,7 @@
           </div>
         </div>
 
-        <div class="assignments-grid">
-          <div class="assignment-card">
-            <div class="assignment-header">
-              <h3>Advanced Algorithms</h3>
-              <span class="badge badge-info">CS101</span>
-            </div>
-            <p class="assignment-code">Assignment #5</p>
-            <div class="assignment-meta">
-              <div class="meta-item">
-                <i class="fas fa-calendar"></i>
-                <span>Due: Apr 25, 2025</span>
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-clock"></i>
-                <span>2 days left</span>
-              </div>
-            </div>
-            <div class="status-badge" style="background: rgba(165, 91, 33, 0.15); color: var(--color-warning); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
-              Not Submitted
-            </div>
-            <button class="btn btn-primary btn-block" onclick="showModal('submitAssignment')">Submit Assignment</button>
-          </div>
-
-          <div class="assignment-card">
-            <div class="assignment-header">
-              <h3>Data Structures</h3>
-              <span class="badge badge-info">CS201</span>
-            </div>
-            <p class="assignment-code">Assignment #4</p>
-            <div class="assignment-meta">
-              <div class="meta-item">
-                <i class="fas fa-calendar"></i>
-                <span>Due: Apr 22, 2025</span>
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-check"></i>
-                <span>Submitted</span>
-              </div>
-            </div>
-            <div class="status-badge" style="background: rgba(67, 122, 34, 0.15); color: var(--color-success); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
-              ✓ Submitted (Grade: A-)
-            </div>
-            <button class="btn btn-outline btn-block">View Feedback</button>
-          </div>
-
-          <div class="assignment-card">
-            <div class="assignment-header">
-              <h3>Web Design Project</h3>
-              <span class="badge badge-info">CS301</span>
-            </div>
-            <p class="assignment-code">Project Report</p>
-            <div class="assignment-meta">
-              <div class="meta-item">
-                <i class="fas fa-calendar"></i>
-                <span>Due: Apr 30, 2025</span>
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-clock"></i>
-                <span>7 days left</span>
-              </div>
-            </div>
-            <div class="status-badge" style="background: rgba(3, 105, 161, 0.15); color: var(--color-blue); padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
-              In Progress
-            </div>
-            <button class="btn btn-primary btn-block" onclick="showModal('submitAssignment')">Submit Assignment</button>
-          </div>
-        </div>
+        <div class="assignments-grid" id="studentAssignmentsGrid"></div>
       </section>
 
       <!-- My Submissions -->
@@ -269,50 +203,7 @@
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Data Structures</td>
-                <td>CS201</td>
-                <td>2025-04-22</td>
-                <td><strong>A-</strong></td>
-                <td>
-                  <div class="similarity-bar">
-                    <div class="similarity-fill low" style="width: 12%"></div>
-                    <span class="similarity-text">12%</span>
-                  </div>
-                </td>
-                <td><span class="badge badge-success">Graded</span></td>
-                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
-              </tr>
-              <tr>
-                <td>Programming Fundamentals</td>
-                <td>CS101</td>
-                <td>2025-04-20</td>
-                <td><strong>B+</strong></td>
-                <td>
-                  <div class="similarity-bar">
-                    <div class="similarity-fill low" style="width: 15%"></div>
-                    <span class="similarity-text">15%</span>
-                  </div>
-                </td>
-                <td><span class="badge badge-success">Graded</span></td>
-                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
-              </tr>
-              <tr>
-                <td>Advanced Algorithms</td>
-                <td>CS101</td>
-                <td>2025-04-18</td>
-                <td><strong>A</strong></td>
-                <td>
-                  <div class="similarity-bar">
-                    <div class="similarity-fill low" style="width: 8%"></div>
-                    <span class="similarity-text">8%</span>
-                  </div>
-                </td>
-                <td><span class="badge badge-success">Graded</span></td>
-                <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails()">View</button></td>
-              </tr>
-            </tbody>
+            <tbody id="studentSubmissionsTableBody"></tbody>
           </table>
         </div>
       </section>
@@ -535,19 +426,31 @@
       <div class="modal-body">
         <form id="submitForm">
           <div class="form-group">
+            <label for="assignmentSelect">Assignment</label>
+            <select id="assignmentSelect" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; font-family: inherit;" required>
+              <option value="">Select an assignment</option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label>Upload File</label>
             <div style="border: 2px dashed var(--color-border); border-radius: 0.65rem; padding: 2rem; text-align: center; cursor: pointer; transition: all var(--transition);" id="fileDropZone">
               <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--color-primary); margin-bottom: 0.5rem; display: block;"></i>
               <p style="font-weight: 600; margin-bottom: 0.25rem;">Drag & drop your file here</p>
               <p style="font-size: 0.875rem; color: var(--color-text-muted);">or click to browse</p>
-              <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx,.txt" />
+              <input type="file" id="fileInput" style="display: none;" accept=".pdf,.docx,.txt" />
             </div>
-            <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.5rem;">Supported formats: PDF, DOCX, TXT (Max 10MB)</p>
+            <p id="selectedFileName" style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.5rem;">Supported formats: PDF, DOCX, TXT (Max 10MB)</p>
           </div>
 
           <div class="form-group">
             <label>Comments (Optional)</label>
-            <textarea placeholder="Add any comments about your submission..." rows="3" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; font-family: inherit;"></textarea>
+            <textarea id="submissionComment" placeholder="Add any comments about your submission..." rows="3" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; font-family: inherit;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="submissionText">Or Paste Text</label>
+            <textarea id="submissionText" placeholder="Paste assignment text here if you do not want to upload a file..." rows="6" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; font-family: inherit;"></textarea>
           </div>
 
           <div style="background: rgba(67, 122, 34, 0.1); border-left: 4px solid var(--color-success); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;;">
@@ -560,7 +463,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeModal('submitAssignment')">Cancel</button>
-        <button class="btn btn-primary" onclick="submitAssignment()">Submit Assignment</button>
+        <button class="btn btn-primary" id="submitAssignmentButton" onclick="submitAssignment()">Submit Assignment</button>
       </div>
     </div>
   </div>
@@ -574,21 +477,199 @@
   <script src="config.js"></script>
   <script src="script.js"></script>
   <script>
-    // Student-specific functions
-    function submitAssignment() {
+    const studentState = {
+      assignments: [],
+      submissions: [],
+      selectedAssignmentId: ''
+    };
+
+    function formatDate(value) {
+      if (!value) return 'Not set';
+      return new Date(value).toLocaleDateString();
+    }
+
+    function getRiskClass(score) {
+      if (score >= 75) return 'high';
+      if (score >= 50) return 'medium';
+      return 'low';
+    }
+
+    function openSubmissionModal(assignmentId) {
+      studentState.selectedAssignmentId = assignmentId;
+      document.getElementById('assignmentSelect').value = assignmentId;
+      showModal('submitAssignment');
+    }
+
+    function renderAssignments(assignments) {
+      const grid = document.getElementById('studentAssignmentsGrid');
+      const assignmentSelect = document.getElementById('assignmentSelect');
+
+      assignmentSelect.innerHTML = '<option value="">Select an assignment</option>';
+
+      if (!assignments.length) {
+        grid.innerHTML = '<div class="assignment-card"><h3>No assignments available</h3><p class="subtitle">Ask a faculty member to create an assignment for one of your enrolled courses.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = assignments.map((assignment) => {
+        const isSubmitted = Boolean(assignment.submission);
+        const statusStyle = isSubmitted
+          ? 'background: rgba(67, 122, 34, 0.15); color: var(--color-success);'
+          : 'background: rgba(165, 91, 33, 0.15); color: var(--color-warning);';
+
+        const courseCode = assignment.course?.courseCode || 'COURSE';
+        const statusLabel = isSubmitted
+          ? `Submitted (${assignment.submission.status})`
+          : 'Ready for submission';
+
+        const option = document.createElement('option');
+        option.value = assignment._id;
+        option.textContent = `${assignment.title} (${courseCode})`;
+        assignmentSelect.appendChild(option);
+
+        return `
+          <div class="assignment-card">
+            <div class="assignment-header">
+              <h3>${assignment.title}</h3>
+              <span class="badge badge-info">${courseCode}</span>
+            </div>
+            <p class="assignment-code">${assignment.description || 'No description provided'}</p>
+            <div class="assignment-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: ${formatDate(assignment.dueDate)}</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-percentage"></i>
+                <span>Threshold: ${assignment.similarityThreshold}%</span>
+              </div>
+            </div>
+            <div class="status-badge" style="${statusStyle} padding: 0.5rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; font-size: 0.875rem; font-weight: 600;">
+              ${statusLabel}
+            </div>
+            <button class="btn btn-primary btn-block" onclick="openSubmissionModal('${assignment._id}')">
+              ${isSubmitted ? 'Resubmit Assignment' : 'Submit Assignment'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSubmissions(submissions) {
+      const tbody = document.getElementById('studentSubmissionsTableBody');
+
+      if (!submissions.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 1.5rem;">No submissions yet. Submit a file from the Assignments tab to start detection.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = submissions.map((submission) => {
+        const similarityScore = submission.report?.similarityScore || 0;
+        return `
+          <tr>
+            <td>${submission.assignmentId?.title || 'Assignment'}</td>
+            <td>${submission.courseId?.courseCode || '--'}</td>
+            <td>${formatDate(submission.submissionDate)}</td>
+            <td><strong>${submission.grade ?? '--'}</strong></td>
+            <td>
+              <div class="similarity-bar">
+                <div class="similarity-fill ${getRiskClass(similarityScore)}" style="width: ${Math.min(similarityScore, 100)}%"></div>
+                <span class="similarity-text">${similarityScore}%</span>
+              </div>
+            </td>
+            <td><span class="badge badge-success">${submission.status}</span></td>
+            <td><button class="btn btn-sm btn-outline" onclick="viewSubmissionDetails('${submission._id}')">View</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadStudentAssignments() {
+      const data = await apiCall('/assignments/student/my-assignments');
+      if (data?.success) {
+        studentState.assignments = data.assignments || [];
+        renderAssignments(studentState.assignments);
+      }
+    }
+
+    async function loadStudentSubmissions() {
+      const data = await apiCall('/submissions/student');
+      if (!data?.success) return;
+
+      const submissionsWithReports = await Promise.all(
+        (data.submissions || []).map(async (submission) => {
+          const details = await apiCall(`/submissions/${submission._id}`);
+          return {
+            ...submission,
+            report: details?.report || null
+          };
+        })
+      );
+
+      studentState.submissions = submissionsWithReports;
+      renderSubmissions(submissionsWithReports);
+    }
+
+    async function submitAssignment() {
       const fileInput = document.getElementById('fileInput');
-      if (!fileInput.files.length) {
-        alert('Please select a file to submit');
+      const assignmentId = document.getElementById('assignmentSelect').value || studentState.selectedAssignmentId;
+      const submissionText = document.getElementById('submissionText').value.trim();
+      const submitButton = document.getElementById('submitAssignmentButton');
+
+      if (!assignmentId) {
+        alert('Please choose an assignment');
+        return;
+      }
+
+      if (!fileInput.files.length && !submissionText) {
+        alert('Please upload a file or paste text to submit');
         return;
       }
 
       const formData = new FormData();
-      formData.append('file', fileInput.files[0]);
-      formData.append('assignmentId', 1); // This would come from the clicked assignment
+      if (fileInput.files.length) {
+        formData.append('file', fileInput.files[0]);
+      }
+      formData.append('assignmentId', assignmentId);
+      if (submissionText) {
+        formData.append('text', submissionText);
+      }
 
-      // Simulate submission
-      alert('Submission successful! Your assignment is being analyzed...');
-      closeModal('submitAssignment');
+      const comment = document.getElementById('submissionComment').value.trim();
+      if (comment) {
+        formData.append('comment', comment);
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Submitting...';
+
+      try {
+        const response = await fetch(window.getApiUrl('/submissions'), {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          },
+          body: formData
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || 'Submission failed');
+        }
+
+        alert('Submission successful! Your assignment is now being analyzed.');
+        document.getElementById('submitForm').reset();
+        document.getElementById('selectedFileName').textContent = 'Supported formats: PDF, DOCX, TXT (Max 10MB)';
+        studentState.selectedAssignmentId = '';
+        closeModal('submitAssignment');
+        await loadStudentAssignments();
+        await loadStudentSubmissions();
+      } catch (error) {
+        alert(error.message || 'Upload failed');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit Assignment';
+      }
     }
 
     function downloadReport() {
@@ -599,15 +680,24 @@
       alert('Share functionality coming soon!');
     }
 
-    function viewSubmissionDetails() {
+    function viewSubmissionDetails(submissionId) {
+      if (submissionId) {
+        console.log('Viewing submission details for', submissionId);
+      }
       showSection('reports');
     }
 
     // File drop zone
     const fileDropZone = document.getElementById('fileDropZone');
     const fileInput = document.getElementById('fileInput');
+    const selectedFileName = document.getElementById('selectedFileName');
 
     fileDropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      selectedFileName.textContent = fileInput.files.length
+        ? `Selected file: ${fileInput.files[0].name}`
+        : 'Supported formats: PDF, DOCX, TXT (Max 10MB)';
+    });
 
     fileDropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -622,6 +712,16 @@
       e.preventDefault();
       fileInput.files = e.dataTransfer.files;
       fileDropZone.style.background = '';
+      selectedFileName.textContent = fileInput.files.length
+        ? `Selected file: ${fileInput.files[0].name}`
+        : 'Supported formats: PDF, DOCX, TXT (Max 10MB)';
+    });
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      if (getUserRole() === 'student') {
+        await loadStudentAssignments();
+        await loadStudentSubmissions();
+      }
     });
   </script>
 </body>

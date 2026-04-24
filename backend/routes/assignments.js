@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { Assignment, Submission } = require('../models');
+const { Assignment, Submission, Course } = require('../models');
 const { authenticate, authorize } = require('../middleware/auth');
 
 // Create Assignment (Faculty/Admin)
@@ -46,6 +46,51 @@ router.get('/course/:courseId', authenticate, async (req, res) => {
     res.json({
       success: true,
       assignments
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+// Get Student Assignments
+router.get('/student/my-assignments', authenticate, authorize(['student']), async (req, res) => {
+  try {
+    const studentId = req.user.userId;
+    const courses = await Course.find({ students: studentId }).select('_id courseCode courseName');
+    const courseIds = courses.map((course) => course._id);
+
+    if (courseIds.length === 0) {
+      return res.json({
+        success: true,
+        assignments: []
+      });
+    }
+
+    const submissions = await Submission.find({ studentId }).select('assignmentId grade status submissionDate');
+    const submissionMap = new Map(
+      submissions.map((submission) => [submission.assignmentId.toString(), submission.toObject()])
+    );
+
+    const assignments = await Assignment.find({ courseId: { $in: courseIds } })
+      .populate('createdBy', 'fullName')
+      .sort({ dueDate: 1 });
+
+    const assignmentsWithCourse = assignments.map((assignment) => {
+      const assignmentObject = assignment.toObject();
+
+      return {
+        ...assignmentObject,
+        course: courses.find((course) => course._id.toString() === assignment.courseId.toString()) || null,
+        submission: submissionMap.get(assignment._id.toString()) || null
+      };
+    });
+
+    res.json({
+      success: true,
+      assignments: assignmentsWithCourse
     });
   } catch (error) {
     res.status(500).json({

@@ -101,6 +101,7 @@ router.get('/student', authenticate, authorize(['student']), async (req, res) =>
   try {
     const submissions = await Submission.find({ studentId: req.user.userId })
       .populate('assignmentId', 'title dueDate')
+      .populate('courseId', 'courseCode courseName')
       .sort({ submissionDate: -1 });
 
     res.json({
@@ -155,7 +156,8 @@ router.get('/:submissionId', authenticate, async (req, res) => {
   try {
     const submission = await Submission.findById(req.params.submissionId)
       .populate('studentId', 'fullName email')
-      .populate('assignmentId');
+      .populate('assignmentId')
+      .populate('courseId', 'courseCode courseName');
 
     if (!submission) {
       return res.status(404).json({
