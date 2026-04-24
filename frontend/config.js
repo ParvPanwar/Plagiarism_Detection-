@@ -1,7 +1,7 @@
 // Frontend runtime configuration.
 // Replace the Railway URL below once your backend is deployed.
 (function() {
-  const RAILWAY_API_BASE = 'https://your-backend.up.railway.app/api';
+  const RAILWAY_API_BASE = 'https://plagiarismdetection-production.up.railway.app/api';
   const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
   window.APP_CONFIG = {
