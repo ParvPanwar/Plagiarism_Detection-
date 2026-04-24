@@ -210,6 +210,7 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
     // Role selection toggle
@@ -272,22 +273,15 @@
       }
 
       try {
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
+        const result = await register(formData);
 
-        if (response.ok) {
+        if (result.success) {
           document.getElementById('successModal').classList.add('active');
           setTimeout(() => {
             window.location.href = 'login.html';
           }, 2500);
         } else {
-          const error = await response.json();
-          document.getElementById('errorMessage').textContent = error.message || 'Registration failed. Please try again.';
+          document.getElementById('errorMessage').textContent = result.error || 'Registration failed. Please try again.';
           document.getElementById('errorModal').classList.add('active');
         }
       } catch (error) {

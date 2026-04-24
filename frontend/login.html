@@ -114,6 +114,7 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
     const loginForm = document.getElementById('loginForm');
@@ -140,18 +141,10 @@
 
       try {
         // API call to backend
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password, remember })
-        });
+        const result = await login(email, password, remember);
 
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('authToken', data.token);
-          localStorage.setItem('userRole', data.userRole);
+        if (result.success) {
+          const data = result.data;
           
           // Show success modal
           document.getElementById('successModal').classList.add('active');
@@ -164,8 +157,7 @@
             window.location.href = dashboard;
           }, 2000);
         } else {
-          const error = await response.json();
-          document.getElementById('errorMessage').textContent = error.message || 'Invalid credentials';
+          document.getElementById('errorMessage').textContent = result.error || 'Invalid credentials';
           document.getElementById('errorModal').classList.add('active');
         }
       } catch (error) {

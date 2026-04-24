@@ -51,7 +51,20 @@ function showFieldError(fieldId, message) {
 }
 
 // API Configuration
-const API_BASE = '/api';
+const API_BASE = window.getApiBase();
+
+function normalizeAuthResponse(data) {
+  const user = data.user || {};
+
+  return {
+    token: data.token,
+    refreshToken: data.refreshToken,
+    userId: data.userId || user.id || user._id,
+    userName: data.userName || user.fullName,
+    userRole: data.userRole || user.userRole,
+    email: user.email
+  };
+}
 
 // Login request
 async function login(email, password) {
@@ -67,13 +80,15 @@ async function login(email, password) {
     const data = await response.json();
 
     if (response.ok) {
+      const authData = normalizeAuthResponse(data);
+
       // Store auth data
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('userRole', data.userRole);
-      localStorage.setItem('userName', data.userName);
-      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('authToken', authData.token);
+      localStorage.setItem('userRole', authData.userRole);
+      localStorage.setItem('userName', authData.userName);
+      localStorage.setItem('userId', authData.userId);
       
-      return { success: true, data };
+      return { success: true, data: authData };
     } else {
       return { success: false, error: data.message };
     }
@@ -96,7 +111,7 @@ async function register(formData) {
     const data = await response.json();
 
     if (response.ok) {
-      return { success: true, data };
+      return { success: true, data: normalizeAuthResponse(data) };
     } else {
       return { success: false, error: data.message };
     }
@@ -192,7 +207,7 @@ async function refreshToken() {
 }
 
 // Periodically verify token (every 5 minutes)
-setInterval(verifyToken, 5 * 60 * 1000);
+const tokenVerifyInterval = setInterval(verifyToken, 5 * 60 * 1000);
 
 // Alert before logout on session timeout
 window.addEventListener('beforeunload', function() {

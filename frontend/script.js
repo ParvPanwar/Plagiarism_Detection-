@@ -295,7 +295,7 @@ async function apiCall(endpoint, method = 'GET', data = null) {
   }
 
   try {
-    const response = await fetch(`/api${endpoint}`, options);
+    const response = await fetch(window.getApiUrl(endpoint), options);
     
     if (response.status === 401) {
       logout();
